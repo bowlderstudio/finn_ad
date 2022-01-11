@@ -17,6 +17,7 @@ def craw_data(driver, data_url):
         try:
             data = {}
             data["title"] = e.find_elements_by_tag_name("a")[0].text
+            data["url"] = e.find_elements_by_tag_name("a")[0].get_attribute("href")
             data["address"] = e.find_elements_by_class_name(
                 "ads__unit__content__details"
             )[0].text
@@ -25,8 +26,8 @@ def craw_data(driver, data_url):
             ].text
             data["area"] = area_price.split("\n")[0].replace(" m²", "")
             data["price"] = area_price.split("\n")[1].replace(" ", "").replace("kr", "")
-
             data_list.append(data)
+
         except:
             print(f"something wrong with {e.find_elements_by_tag_name('a')[0].text}")
     return data_list
@@ -64,6 +65,7 @@ def load_data(driver, data_url, data_path):
                 "area": row["area"],
                 "price": row["price"],
                 "date": date.today().strftime("%d-%m-%Y"),
+                "url": row["url"],
             }
             old_data = old_data.append(new_row, ignore_index=True)
 
@@ -78,7 +80,7 @@ def load_data(driver, data_url, data_path):
 
 opts = FirefoxOptions()
 opts.add_argument("--headless")
-driver = webdriver.Firefox(firefox_binary="/usr/bin/firefox", options=opts)
+driver = webdriver.Firefox(firefox_binary="/usr/bin/firefox")
 
 hybel_url = "https://www.finn.no/realestate/lettings/search.html?area_from=20&area_to=50&location=1.22030.20045&no_of_bedrooms_from=1&property_type=16&sort=PUBLISHED_DESC&stored-id=53458586"
 hybel_datafile = "/home/minshi/workdata/projects/finn_ad/data/hybel.csv"
