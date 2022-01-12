@@ -57,7 +57,9 @@ def load_data(driver, data_url, data_path):
     new_data = get_new_data(driver, data_url)
 
     for index, row in new_data.iterrows():
-        if not old_data.loc[old_data["address"] == row["address"]].size:
+
+        found_index = old_data.index[old_data["address"] == row["address"]]
+        if not found_index.size:
             print("Come new leie ad")
             new_row = {
                 "title": row["title"],
@@ -68,6 +70,8 @@ def load_data(driver, data_url, data_path):
                 "url": row["url"],
             }
             old_data = old_data.append(new_row, ignore_index=True)
+        elif old_data.at[found_index[0], "rent_out"] == "True":
+            old_data.at[found_index, "rent_out"] == "False"
 
     for index, row in old_data[old_data["rent_out"] != "True"].iterrows():
         if not new_data.loc[new_data["address"] == row["address"]].size:
