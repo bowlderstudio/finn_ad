@@ -18,14 +18,24 @@ def craw_data(driver, data_url):
             data = {}
             data["title"] = e.find_elements_by_tag_name("a")[0].text
             data["url"] = e.find_elements_by_tag_name("a")[0].get_attribute("href")
-            data["address"] = e.find_elements_by_class_name(
-                "ads__unit__content__details"
-            )[0].text
-            area_price = e.find_elements_by_class_name("ads__unit__content__keys")[
-                0
-            ].text
-            data["area"] = area_price.split("\n")[0].replace(" m²", "")
-            data["price"] = area_price.split("\n")[1].replace(" ", "").replace("kr", "")
+            if e.find_elements_by_class_name("ads__unit__content__details"):
+                data["address"] = e.find_elements_by_class_name(
+                    "ads__unit__content__details"
+                )[0].text
+                area_price = e.find_elements_by_class_name("ads__unit__content__keys")[
+                    0
+                ].text
+                data["price"] = area_price.replace(" ", "").replace("kr", "")
+            elif e.find_elements_by_class_name("justify-between"):
+                search_items = e.find_elements_by_class_name("justify-between")
+                data["address"] = search_items[0].text
+                data["area"] = search_items[1].text.split("\n")[0].replace(" m²", "")
+                data["price"] = (
+                    search_items[1]
+                    .text.split("\n")[1]
+                    .replace(" ", "")
+                    .replace("kr", "")
+                )
             data_list.append(data)
 
         except:
@@ -71,7 +81,7 @@ def load_data(driver, data_url, data_path):
             }
             old_data = old_data.append(new_row, ignore_index=True)
         elif old_data.at[found_index[0], "rent_out"] == "True":
-            old_data.at[found_index, "rent_out"] == "False"
+            old_data.at[found_index[0], "rent_out"] == "False"
 
     for index, row in old_data[old_data["rent_out"] != "True"].iterrows():
         if not new_data.loc[new_data["address"] == row["address"]].size:
