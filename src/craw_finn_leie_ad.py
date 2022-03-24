@@ -97,9 +97,15 @@ opts.add_argument("--headless")
 driver = webdriver.Firefox(firefox_binary="/usr/bin/firefox")
 
 hybel_url = "https://www.finn.no/realestate/lettings/search.html?area_from=20&area_to=50&location=1.22030.20045&no_of_bedrooms_from=1&property_type=16&sort=PUBLISHED_DESC&stored-id=53458586"
-hybel_datafile = "/home/minshi/workdata/projects/finn_ad/data/hybel.csv"
+hybel_datafile = "/home/minshi/workdata/projects/finn_ad/data/hybel_baerum.csv"
 
-print(f"download new hybel data from finn")
+print(f"download new hybel data from finn in Bærum")
+load_data(driver, hybel_url, hybel_datafile)
+
+hybel_url = "https://www.finn.no/realestate/lettings/search.html?area_from=20&area_to=50&location=1.22030.20046&no_of_bedrooms_from=1&property_type=16&sort=PUBLISHED_DESC"
+hybel_datafile = "/home/minshi/workdata/projects/finn_ad/data/hybel_asker.csv"
+
+print(f"download new hybel data from finn in Asker")
 load_data(driver, hybel_url, hybel_datafile)
 
 hybel_url = "https://www.finn.no/realestate/lettings/search.html?location=1.22030.20045&property_type=1&sort=PUBLISHED_DESC&stored-id=53652541"
